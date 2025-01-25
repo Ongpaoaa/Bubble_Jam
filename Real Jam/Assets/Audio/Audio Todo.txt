@@ -15,3 +15,10 @@ elevator ding
 
 elevator hum
 
+
+Just Added :)
+fan click open/close
+bubble pop
+game over sound effect
+title bgm
+
