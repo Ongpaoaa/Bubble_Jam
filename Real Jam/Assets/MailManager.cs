@@ -4,23 +4,37 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-
 public class MailManager : MonoBehaviour
 {
+    public GameObject mailUI;
+    public GameObject composeUI;
     public TMP_InputField workerName;
     public TMP_InputField message;
-    void Start()
-    {
 
+    void Update()
+    {
+        if(mailUI.active == true)
+        {
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                sentMessage();
+                mailUI.SetActive(false);
+                composeUI.SetActive(true);
+            }
+        }
     }
 
+    public void openMailUI()
+    {
+        mailUI.SetActive(true);
+    }
     public void sentMessage()
     {
         Worker[] workers = FindObjectsOfType<Worker>();
-        
+
         foreach (Worker worker in workers)
         {
-            if (worker.name == workerName.text)
+            if (worker.name.ToLower() == workerName.text.ToLower())
             {
                 worker.decideAndAct(message.text);
             }
@@ -32,6 +46,5 @@ public class MailManager : MonoBehaviour
     {
         workerName.text = "";
         message.text = "";
-
     }
 }
