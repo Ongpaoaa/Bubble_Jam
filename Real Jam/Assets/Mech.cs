@@ -10,6 +10,11 @@ public class Mech : MonoBehaviour
     public float openTime;  // Time in seconds before the mechanism automatically closes
     private Animator anim;  // Animator for doors
 
+    [Header("Fan Sound Set")]
+    public string fanStartSound = "Fan-TurnOn";  // Sound to play when fan starts
+    public string fanWhileSound = "Fan-Steady";  // Looping sound for fan
+    public string fanEndSound = "Fan-TurnOff";   // Sound to play when fan stops
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,8 +27,11 @@ public class Mech : MonoBehaviour
         {
             if (mechType == "fan")
             {
-                Debug.Log("fan");
+                Debug.Log("Fan Activated");
                 etc.SetActive(true);
+
+                // Play the sound set for the fan
+                SoundEffectManager.Instance.PlaySoundSet(fanStartSound, fanWhileSound, fanEndSound);
             }
 
             if (mechType == "door")
@@ -52,7 +60,11 @@ public class Mech : MonoBehaviour
         {
             if (mechType == "fan")
             {
+                Debug.Log("Fan Deactivated");
                 etc.SetActive(false);
+
+                // Stop the sound set for the fan
+                SoundEffectManager.Instance.StopSoundSet(fanEndSound);
             }
 
             if (mechType == "door")
@@ -74,11 +86,10 @@ public class Mech : MonoBehaviour
 
     private IEnumerator AutoCloseAfterTime()
     {
-        if(openTime != 0)
+        if (openTime != 0)
         {
             yield return new WaitForSeconds(openTime);
             closeMech();
         }
-        
     }
 }

@@ -6,28 +6,36 @@ using TMPro;
 
 public class MailManager : MonoBehaviour
 {
-    public GameObject mailUI;
-    public GameObject composeUI;
+    public CanvasGroup mailUICanvasGroup; // CanvasGroup for mailUI
+    public CanvasGroup composeUICanvasGroup; // CanvasGroup for composeUI
     public TMP_InputField workerName;
     public TMP_InputField message;
 
+    public float fadeDuration = 0.5f; // Duration of fade-in/out
+
     void Update()
     {
-        if(mailUI.active == true)
+        if (mailUICanvasGroup.alpha > 0)
         {
             if (Input.GetKeyDown(KeyCode.Return))
             {
                 sentMessage();
-                mailUI.SetActive(false);
-                composeUI.SetActive(true);
+                StartCoroutine(FadeOut(mailUICanvasGroup, () => StartCoroutine(FadeIn(composeUICanvasGroup))));
             }
         }
     }
 
     public void openMailUI()
     {
-        mailUI.SetActive(true);
+        StartCoroutine(FadeIn(mailUICanvasGroup));
+        StartCoroutine(FadeOut(composeUICanvasGroup));
     }
+
+    public void closeMailUI()
+    {
+        StartCoroutine(FadeOut(mailUICanvasGroup, () => StartCoroutine(FadeIn(composeUICanvasGroup))));
+    }
+
     public void sentMessage()
     {
         Worker[] workers = FindObjectsOfType<Worker>();
@@ -39,12 +47,45 @@ public class MailManager : MonoBehaviour
                 worker.decideAndAct(message.text);
             }
         }
-        clearText();
+        SoundEffectManager.Instance.PlaySound("EmailNotification", 1f, 1f);
+        closeMailUI();
     }
 
     public void clearText()
     {
         workerName.text = "";
         message.text = "";
+    }
+
+    private IEnumerator FadeIn(CanvasGroup canvasGroup)
+    {
+        float elapsedTime = 0f;
+        while (elapsedTime < fadeDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            canvasGroup.alpha = Mathf.Clamp01(elapsedTime / fadeDuration);
+            yield return null;
+        }
+        canvasGroup.alpha = 1f;
+        canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = true;
+    }
+
+    private IEnumerator FadeOut(CanvasGroup canvasGroup, System.Action onComplete = null)
+    {
+        float elapsedTime = 0f;
+        while (elapsedTime < fadeDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            canvasGroup.alpha = Mathf.Clamp01(1f - (elapsedTime / fadeDuration));
+            yield return null;
+        }
+        canvasGroup.alpha = 0f;
+        clearText();
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = false;
+
+        // Call onComplete callback after fade out
+        onComplete?.Invoke();
     }
 }
