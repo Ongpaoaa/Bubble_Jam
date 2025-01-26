@@ -1,15 +1,4 @@
-Desk
-Pc w/ Tower
-All in one PC
-
-File Cabinet
-
-Water Cooler
-
-Desk Fan
-Tower Fan
-Ceiling Fan
-
+DONE:
 
 desk spiderplant
 potted flower
@@ -19,6 +8,24 @@ potted palm
 bg posters
 
 hanging lights - 
+Desk
+Table
+File Cabinet
+Water Cooler
+
+todo:
+
+Pc w/ Tower
+All in one PC
+
+
+
+Desk Fan
+Tower Fan
+//Ceiling Fan
+
+
+
 
 Bubble with ripple variation, pushed ) and regular o
 
