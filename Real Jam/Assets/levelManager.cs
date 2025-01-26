@@ -39,6 +39,7 @@ public class levelManager : MonoBehaviour
     {
         Debug.Log("Win");
         gameStatus = "win";
-        UI.SetTrigger("Win");
+        UI.SetTrigger("Win");   
+
     }
 }
